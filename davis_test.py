@@ -347,13 +347,14 @@ def main():
         flow_dir = os.path.join(dataset_dir, 'Flow', resolution, video_dir)
         cache_dir = os.path.join(dataset_dir, 'Cache', resolution, args.cache, video_dir)
         frames_num = len(os.listdir(frame_dir))
+        frames_num = 10
 
         if (video_cnt % args.gpu_num != args.gpu):
             frame_cnt += frames_num
             continue
 
         frame_0 = cv2.imread(os.path.join(frame_dir, '%05d.jpg' % 0))
-        label_0 = cv2.imread(os.path.join(label_dir, '%05d.png' % 0), cv2.IMREAD_UNCHANGED)
+        label_0 = cv2.imread(os.path.join(label_dir, '%05d.png' % 0), 0)
 
         instance_num = label_0.max()
 
@@ -382,8 +383,8 @@ def main():
         for th in range(1, frames_num):
             frames[th] = cv2.imread(os.path.join(frame_fr_dir, '%05d.jpg' % th))
             pred_prob[th] = label_to_prob(np.zeros_like(label_0, np.uint8), instance_num)
-            flow1[th - 1] = flo.readFlow(os.path.join(flow_dir, '%05d.flo' % (th - 1)))
-            flow2[th] = flo.readFlow(os.path.join(flow_dir, '%05d.rflo' % th))
+            flow1[th - 1] = flo.readFlow(os.path.join(flow_dir, '%06d.flo' % (th - 1)))
+            flow2[th] = flo.readFlow(os.path.join(flow_dir, '%06d.rflo' % (th - 1)))
             person_reid[th] = person_all[frame_cnt + th]
             object_reid[th] = object_all[frame_cnt + th]
 
